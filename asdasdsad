@@ -1,0 +1,231 @@
+package agenda;
+
+public class Contacto {
+	// Definimos los atributos
+	public String nombre;
+	String telefono;
+	public String email;	
+
+	// Definimos el constructor
+	public Contacto(String nombre,String telefono,String email){
+		this.nombre=nombre;
+		this.telefono=telefono;
+		this.email=email;
+	}
+
+	// Sobrecarga del Metodo constructor
+	public Contacto(String nombre,String telefono){
+		this.nombre=nombre;
+		this.telefono=telefono;
+		this.email="";
+	}
+
+	// Sobrecarga del Metodo constructor
+	public Contacto(){		
+	}
+
+	// Metodos
+	public String getNombre(){		
+		return this.nombre;
+	}
+
+	public String getTelefono(){		
+		return this.telefono;
+	}
+
+	public String getEmail(){		
+		return this.email;
+	}
+
+	public void setNombre(String nombre){
+		this.nombre=nombre;
+	}	
+
+	public void setTelefono(String telefono){
+		this.telefono=telefono;
+	}
+
+	public void setEmail(String email){
+		this.email=email;
+	}
+
+	public void DatosContacto(){
+		System.out.println("Nombre: "+this.nombre);
+		System.out.println("Telefono: "+ getTelefono());
+		System.out.println("Email: "+this.getEmail());
+	}	
+	// static: permite usar el metodo suma sin instanciar la clase
+	public static float suma(float a, float b){		
+		return a+b;
+	}
+
+}
+
+
+
+package agenda;
+
+public class Agenda {	
+	//Atributos
+	Contacto[] lista;	
+
+	//Metodos Constructores
+	public Agenda(int tamanio_agenda){
+		this.lista= new Contacto[tamanio_agenda]; 
+	}
+
+	public Agenda(){
+		this.lista= new Contacto[10]; 
+	}	
+
+	//Metodos
+
+	//Metodo insertar contactos
+	public void setContacto(Contacto c){		
+		int indice=buscar_indice_vacio();
+
+		if(indice<0){
+			System.out.println("");
+			System.out.println("Importante: Agenda llena!");
+		}else{
+			this.lista[indice]=c;	
+		}								
+	}
+
+	private int buscar_indice_vacio() {		
+		int indice=0;		
+		while(this.lista[indice]!=null){			
+			indice++;
+			if(indice > (this.lista).length-1){
+				return -1;
+			}				
+		}		
+		return indice;				
+	}
+
+	public void listarContactos(){
+		System.out.println("");
+		System.out.println("Lista de contactos");
+		for(int i=0;i<(this.lista).length;i++){
+			if(this.lista[i]==null){
+
+			}else{
+				System.out.println("");
+				System.out.println("Contacto: "+(i+1));
+				(this.lista[i]).DatosContacto();
+			}
+		}			
+	}
+	
+	public void buscarPorNombre(String nombre){
+		boolean find=false;
+		for(int i=0;i<(this.lista).length;i++){
+			if(this.lista[i] != null && this.lista[i].getNombre().equalsIgnoreCase(nombre) ){
+				System.out.println("Su telefono es "+ this.lista[i].getTelefono());
+				System.out.println("Su correo es "+ this.lista[i].getEmail());
+				find=true;
+			}
+		}
+		
+		if(!find){
+			System.out.println("No se encontro el contacto");
+		}
+	}
+	
+	public void eliminarContacto(Contacto c){
+		boolean find=false;
+		for(int i=0;i<(this.lista).length;i++){
+			if(this.lista[i] != null && this.lista[i].equals(c) ){
+				this.lista[i]=null;
+				find=true;
+				}
+		}
+		if(!find){
+			System.out.println("No se pudo eliminar el contacto");
+		}
+		
+	}
+
+
+
+}
+
+
+
+
+
+
+package agenda;
+
+import java.util.Scanner;
+public class principal {
+
+	public static void main(String[] arg){		
+
+		Scanner reader=new Scanner(System.in);
+		int opcion, tamanio;
+		Contacto mi_contacto;
+		String nombre, telefono, email;
+		boolean band=true;	
+
+		System.out.print("Tamaño de la agenda: ");
+		tamanio=reader.nextInt();
+		Agenda mi_agenda=new Agenda(tamanio);		
+
+		while(band==true){	
+			menu();			
+			System.out.print("> Elegir opcion: ");
+			opcion=reader.nextInt();
+
+			switch(opcion){
+				case 1: //insertar contacto
+					System.out.print("Ingresar nombre contacto: ");
+					nombre=reader.next();
+					System.out.print("Ingresar telefono contacto: ");
+					telefono=reader.next();
+					System.out.print("Ingresar email contacto: ");
+					email=reader.next();
+
+					mi_contacto=new Contacto(nombre,telefono,email);
+					mi_agenda.setContacto(mi_contacto);
+					break;
+				case 2:
+					break;
+				case 3:
+					System.out.println("Ingrese el nombre del contacto para buscar: ");
+					nombre=reader.next();
+					mi_agenda.buscarPorNombre(nombre);
+					break;
+				case 4:
+					System.out.println("Ingrese el nombre del contacto para eliminar: ");
+					nombre=reader.next();
+					c=new Contacto(nombre,null,null);
+					mi_agenda.eliminarContacto(c);
+					break;
+				case 5://Listar Contactos
+					mi_agenda.listarContactos();
+					break;
+				case 0://Finalizar programa
+					band=false;
+					break;
+				default:				
+					break;					
+			}				
+		}		
+	}
+
+	//Metodo de menu de opciones del proyecto
+	public static void menu(){
+		System.out.println("");
+		System.out.println("========= Menu Agenda Telefonica =========");
+		System.out.println("[1] Añadir Contacto");
+		System.out.println("[2] Editar Contacto");
+		System.out.println("[3] Buscar Contacto");
+		System.out.println("[4] Eliminar Contacto"); // por nombre
+		System.out.println("[5] Listar Contacto");
+		System.out.println("[0] Finalizar Programa");
+	}
+
+
+
+}
